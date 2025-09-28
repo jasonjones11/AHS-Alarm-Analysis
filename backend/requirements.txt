@@ -1,0 +1,44 @@
+# Mining Truck Data API - Production Dependencies
+# Clean, minimal dependencies for the refactored backend system
+
+# ================================
+# Web Framework and Server
+# ================================
+fastapi==0.104.1              # Modern Python web framework with automatic API docs
+uvicorn[standard]==0.24.0      # High-performance ASGI server for FastAPI
+
+# ================================
+# Database and Data Processing
+# ================================
+influxdb==5.2.3               # InfluxDB client for alarm extraction
+pandas==2.1.4                 # Data processing for telemetry analysis
+
+# ================================
+# Data Validation and Models
+# ================================
+pydantic==2.5.0                # Data validation and serialization with type hints
+
+# ================================
+# Timezone and Date Handling
+# ================================
+pytz==2023.3                   # Timezone support for time range conversions
+
+# ================================
+# Utilities and Type Hints
+# ================================
+typing-extensions==4.8.0       # Extended typing support for older Python versions
+
+# ================================
+# Development and Testing (Optional)
+# ================================
+# Uncomment for development:
+# pytest==7.4.3                # Testing framework
+# httpx==0.25.2                 # HTTP client for API testing
+# pytest-asyncio==0.21.1       # Async testing support
+
+# ================================
+# Production Monitoring (Optional)  
+# ================================
+# Uncomment for production monitoring:
+# prometheus-client==0.19.0     # Metrics collection
+# structlog==23.2.0             # Structured logging

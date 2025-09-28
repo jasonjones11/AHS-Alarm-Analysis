@@ -1,0 +1,347 @@
+@import "tailwindcss";
+@import 'leaflet/dist/leaflet.css';
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --background: #425563;
+  --foreground: #ffffff;
+  --epiroc-gray: #425563;
+  --epiroc-yellow: #ffc726;
+  --epiroc-dark-blue: #001e32;
+  --epiroc-light-blue: #489dc5;
+  --epiroc-violet: #612c51;
+  --epiroc-green: #4c8c2b;
+  --epiroc-red: #b83149;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: 'Raleway', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-raleway: 'Raleway', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #425563;
+    --foreground: #ffffff;
+  }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#__next {
+  height: 100%;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  pointer-events: auto !important;
+  cursor: grab !important;
+}
+
+.leaflet-container:active {
+  cursor: grabbing !important;
+}
+
+/* Mining Map Specific Styles - Epiroc gray theme with no tile layer */
+.mining-map {
+  background: #425563 !important;
+  height: 100% !important;
+  width: 100% !important;
+  min-height: 400px !important;
+}
+
+/* Remove default Leaflet attribution for cleaner look */
+.mining-map .leaflet-control-attribution {
+  display: none;
+}
+
+/* Style mine feature tooltips */
+.mine-feature-tooltip {
+  background: rgba(55, 65, 81, 0.9);
+  color: #e5e7eb;
+  border: 1px solid #6b7280;
+  border-radius: 4px;
+  font-size: 12px;
+  padding: 4px 8px;
+}
+
+/* Alarm marker styling */
+.alarm-marker {
+  border-radius: 50% !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.leaflet-zoom-box {
+  pointer-events: auto !important;
+}
+
+.leaflet-control-zoom {
+  pointer-events: auto !important;
+}
+
+.leaflet-control-zoom a {
+  pointer-events: auto !important;
+}
+
+/* Vehicle markers should not interfere with map interactions */
+.modern-vehicle-marker {
+  pointer-events: none !important;
+}
+
+.modern-vehicle-marker * {
+  pointer-events: none !important;
+}
+
+/* Custom range slider styles */
+.slider-thumb-start::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #3b82f6;
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+.slider-thumb-start::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #3b82f6;
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.slider-thumb-end::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #1e40af;
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 2;
+}
+
+.slider-thumb-end::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #1e40af;
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+/* Add hover states to make thumbs more distinguishable */
+.slider-thumb-start:hover::-webkit-slider-thumb {
+  background: #2563eb;
+  transform: scale(1.1);
+}
+
+.slider-thumb-end:hover::-webkit-slider-thumb {
+  background: #1d4ed8;
+  transform: scale(1.1);
+}
+
+.slider-thumb-start::-webkit-slider-track,
+.slider-thumb-end::-webkit-slider-track {
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.slider-thumb-start::-moz-range-track,
+.slider-thumb-end::-moz-range-track {
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+/* Custom tooltip styles */
+.custom-tooltip {
+  background: rgba(0, 0, 0, 0.8) !important;
+  border: none !important;
+  border-radius: 4px !important;
+  color: white !important;
+  font-size: 12px !important;
+  padding: 4px 8px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+.custom-tooltip::before {
+  border-top-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Modern alarm tooltip styles */
+.modern-alarm-tooltip-container {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.modern-alarm-tooltip {
+  background: rgba(31, 41, 55, 0.95) !important;
+  border: 1px solid rgba(75, 85, 99, 0.5) !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  min-width: 200px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(8px) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+.modern-alarm-tooltip .tooltip-header {
+  color: #f9fafb !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  margin-bottom: 8px !important;
+  padding-bottom: 6px !important;
+  border-bottom: 1px solid rgba(75, 85, 99, 0.3) !important;
+}
+
+.modern-alarm-tooltip .tooltip-content {
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+}
+
+.modern-alarm-tooltip .tooltip-content > div {
+  margin-bottom: 4px !important;
+  color: #e5e7eb !important;
+}
+
+.modern-alarm-tooltip .tooltip-content > div:last-child {
+  margin-bottom: 0 !important;
+}
+
+.modern-alarm-tooltip .tooltip-label {
+  color: #9ca3af !important;
+  font-weight: 500 !important;
+  display: inline-block !important;
+  min-width: 60px !important;
+}
+
+/* Mine shape tooltip styles */
+.mine-shape-tooltip-container {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.mine-shape-tooltip {
+  background: rgba(31, 41, 55, 0.95) !important;
+  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+  border-radius: 8px !important;
+  padding: 10px !important;
+  min-width: 180px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(8px) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+.mine-shape-tooltip .shape-header {
+  color: #22c55e !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  margin-bottom: 6px !important;
+  padding-bottom: 4px !important;
+  border-bottom: 1px solid rgba(34, 197, 94, 0.2) !important;
+}
+
+.mine-shape-tooltip .shape-content {
+  font-size: 11px !important;
+  line-height: 1.3 !important;
+}
+
+.mine-shape-tooltip .shape-content > div {
+  margin-bottom: 3px !important;
+  color: #d1d5db !important;
+}
+
+.mine-shape-tooltip .shape-content > div:last-child {
+  margin-bottom: 0 !important;
+}
+
+.mine-shape-tooltip .shape-label {
+  color: #9ca3af !important;
+  font-weight: 500 !important;
+  display: inline-block !important;
+  min-width: 55px !important;
+}
+
+/* Hide default Leaflet shape boundaries and selections */
+.leaflet-interactive:focus,
+.leaflet-interactive:hover {
+  outline: none !important;
+  stroke-dasharray: none !important;
+  stroke-width: 1px !important;
+}
+
+/* Remove default Leaflet popup/tooltip styling */
+.leaflet-tooltip-pane .leaflet-tooltip {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.leaflet-tooltip-pane .leaflet-tooltip:before {
+  display: none !important;
+}
+
+/* Force header to always stay visible */
+header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 9999 !important;
+  background: #1f2937 !important;
+}
+
+/* Prevent Leaflet from overriding layout */
+.leaflet-container {
+  z-index: 1 !important;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.leaflet-map-pane, 
+.leaflet-tile-pane, 
+.leaflet-marker-pane,
+.leaflet-shadow-pane,
+.leaflet-overlay-pane {
+  z-index: 1 !important;
+}
+
+/* Ensure no element can hide the header */
+main {
+  position: relative !important;
+  z-index: 0 !important;
+}

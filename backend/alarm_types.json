@@ -1,0 +1,30 @@
+{
+  "default_alarm_types": [
+    "Dump Bed Cannot Be Raised While Vehicle Tilted",
+    "Tilt exceeded with dump bed raised",
+    "Off Path",
+    "Bump Detected: Dump",
+    "Bump Detected: Close",
+    "Undocumented Error c419",
+    "Failed to Drive When Commanded",
+    "Test"
+
+  ],
+  "current_alarm_types": [
+    "Dump Bed Cannot Be Raised While Vehicle Tilted",
+    "Tilt exceeded with dump bed raised",
+    "Off Path",
+    "Bump Detected: Dump",
+    "Bump Detected: Close",
+    "Undocumented Error c419",
+    "Failed to Drive When Commanded",
+    "Test"
+
+  ],
+  "extraction_settings": {
+    "query_delay_seconds": 0.01,
+    "max_points_per_query": 1000,
+    "telemetry_window_seconds": 0.5,
+    "description": "Configurable settings for data extraction. query_delay_seconds controls the delay between InfluxDB queries to protect server performance. Lower values = faster extraction but higher server load."
+  }
+}
