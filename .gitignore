@@ -73,10 +73,12 @@ license_*.json
 *.sqlite3
 *.duckdb
 
-# Configuration files with sensitive data
-config.json
-*_config.json
-settings.json
+# Configuration files with sensitive data (exclude sensitive configs only)
+*_secret.json
+*_private.json
+*_credentials.json
+local_config.json
+user_settings.json
 
 # ================================
 # Logs and Temporary Files
@@ -138,10 +140,16 @@ desktop.ini
 mining_trucks*.duckdb
 *.duckdb
 
-# Distribution packages
+# Distribution packages and builds
 AHS-Alarm-Analysis-Distribution/
 AHS-Simple-Native/
+AHS-Alarm-Analysis-Team/
 distribution/
+
+# Additional build directories that may be created
+*-Simple-Native/
+*-Distribution/
+*-Team/
 
 # Screenshot files
 *.png

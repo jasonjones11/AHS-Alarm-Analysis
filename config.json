@@ -1,0 +1,54 @@
+{
+  "application": {
+    "name": "AHS Alarm Analysis System",
+    "version": "1.0.0",
+    "description": "Autonomous Haul System alarm analysis with mapping and visualization"
+  },
+  "extraction_settings": {
+    "query_delay_seconds": 0.1,
+    "max_points_per_query": 1000,
+    "telemetry_window_seconds": 0.5,
+    "max_concurrent_extractions": 3,
+    "default_timeout_seconds": 60,
+    "description": "Data extraction performance settings"
+  },
+  "performance": {
+    "query_delay_seconds": {
+      "current": 0.1,
+      "min": 0.05,
+      "max": 1.0,
+      "recommended": 0.1,
+      "description": "Delay between InfluxDB queries in seconds. Lower = faster extraction but higher server load. Adjust based on your InfluxDB server capacity."
+    },
+    "max_points_per_query": {
+      "current": 1000,
+      "min": 100,
+      "max": 5000,
+      "recommended": 1000,
+      "description": "Maximum data points per telemetry query. Higher = fewer queries but larger responses."
+    },
+    "telemetry_window_seconds": {
+      "current": 0.5,
+      "min": 0.1,
+      "max": 2.0,
+      "recommended": 0.5,
+      "description": "Time window (±) for collecting telemetry data around each alarm event."
+    }
+  },
+  "frontend": {
+    "api_base_url": "http://127.0.0.1:9500",
+    "refresh_interval_ms": 5000,
+    "max_concurrent_requests": 5
+  },
+  "backend": {
+    "host": "127.0.0.1",
+    "port": 9500,
+    "cors_origins": ["http://localhost:3000", "http://127.0.0.1:3000"],
+    "log_level": "INFO"
+  },
+  "notes": {
+    "query_delay_tuning": "If your InfluxDB server is powerful, you can reduce query_delay_seconds to 0.05 for faster extractions. If you experience timeouts or high server load, increase to 0.2-0.3.",
+    "extraction_speed": "Current settings provide good balance between speed and server protection. Typical extraction: ~100 alarms in 10-30 seconds.",
+    "modifications": "To apply changes, restart the backend service. Some settings may require rebuilding the executable."
+  }
+}
