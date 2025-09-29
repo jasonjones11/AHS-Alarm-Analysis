@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { convertLocalInputToTimestamp, getPerthTimezoneInfo } from '@/utils/timeUtils';
 import { createComponentLogger } from '@/utils/frontendLogger';
@@ -52,10 +52,11 @@ export default function DataExtractionPanel({ onExtractionComplete, previouslyEx
   const [extractionStatus, setExtractionStatus] = useState<ExtractionStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Predefined alarm types for autonomous trucks (from alarm_extractor.py)
-  const ALARM_TYPES = [
+  // Load alarm types from API (from alarm_types.json configuration)
+  const [availableAlarmTypes, setAvailableAlarmTypes] = useState<string[]>([
+    // Fallback defaults while loading from API
     "Dump Bed Cannot Be Raised While Vehicle Tilted",
-    "Tilt exceeded with dump bed raised", 
+    "Tilt exceeded with dump bed raised",
     "Off Path",
     "Steering Restricted",
     "Bump Detected: Dump",
@@ -63,7 +64,28 @@ export default function DataExtractionPanel({ onExtractionComplete, previouslyEx
     "Undocumented Error c419",
     "Failed to Drive When Commanded",
     "Slippery Conditions Caused Vehicle To Stop"
-  ];
+  ]);
+
+  // Load alarm types from backend API
+  const loadAlarmTypesFromAPI = useCallback(async () => {
+    try {
+      const response = await fetch(buildApiUrl('/alarm-types'))
+      if (response.ok) {
+        const result = await response.json()
+        if (result.status === 'success' && result.data?.current_alarm_types) {
+          setAvailableAlarmTypes(result.data.current_alarm_types)
+          console.log('[DataExtraction] Loaded alarm types from API:', result.data.current_alarm_types)
+        }
+      }
+    } catch (error) {
+      console.warn('[DataExtraction] Failed to load alarm types from API, using defaults:', error)
+    }
+  }, [])
+
+  // Load alarm types on component mount
+  useEffect(() => {
+    loadAlarmTypesFromAPI()
+  }, [loadAlarmTypesFromAPI])
 
   // Set default time range (2 hours ending now) in Perth time for alarm analysis
   useEffect(() => {
@@ -226,7 +248,7 @@ export default function DataExtractionPanel({ onExtractionComplete, previouslyEx
         '(will find events for these alarm types)');
       console.log('- include_autonomous:', extractionRequest.alarm_filter.include_autonomous,
         '(will extract telemetry for all autonomous vehicles with alarms)');
-      console.log('- alarm count:', selectedAlarms.length, 'out of', ALARM_TYPES.length, 'available types');
+      console.log('- alarm count:', selectedAlarms.length, 'out of', availableAlarmTypes.length, 'available types');
       
       console.log('Full request object:', JSON.stringify(extractionRequest, null, 2));
       console.log('====================================');
@@ -490,21 +512,22 @@ export default function DataExtractionPanel({ onExtractionComplete, previouslyEx
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto bg-[#425563] rounded-lg shadow-2xl border border-epiroc-gray font-raleway">
-      <div className="px-6 py-4 border-b border-epiroc-gray bg-[#ffc726] rounded-t-lg">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-[#425563] flex items-center space-x-3">
-              <Image
-                src="/icons/Haul Truck - CAT - Loaded.png"
-                alt="Mining Truck"
-                width={28}
-                height={28}
-                className="filter brightness-0 saturate-0" style={{filter: 'brightness(0) saturate(100%) invert(33%) sepia(20%) saturate(1004%) hue-rotate(175deg) brightness(90%) contrast(85%)'}}
-              />
-              <span>AHS Alarm Analysis</span>
+    <div className="w-full max-w-4xl mx-auto bg-[#425563] rounded-lg shadow-2xl border-2 border-black/50 font-raleway">
+      <div className="px-6 py-4 border-b-2 border-black/50 bg-[#425563] rounded-t-lg shadow-lg relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#425563] via-[#4a5f6f] to-[#425563] rounded-t-lg"></div>
+        <div className="relative z-10">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-bold text-[#ffc726] flex items-center space-x-3 drop-shadow-md">
+              <div className="p-1 bg-[#ffc726]/20 rounded border border-[#ffc726]/30">
+                <svg className="w-4 h-4 text-[#ffc726]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+              </div>
+              <span>Extract New Data</span>
             </h2>
-            <p className="text-[#425563] text-sm mt-2">Analyze alarm events with telemetry data (GPS, speed, pitch, roll) from InfluxDB</p>
+            <p className="text-[#ffc726] text-sm mt-2 drop-shadow-sm">Analyze alarm events with telemetry data (GPS, speed, pitch, roll) from InfluxDB</p>
+            </div>
           </div>
         </div>
       </div>
@@ -587,7 +610,7 @@ export default function DataExtractionPanel({ onExtractionComplete, previouslyEx
           <div className="space-y-3">
             <div className="flex items-center space-x-3 mb-3">
               <button
-                onClick={() => setSelectedAlarms(ALARM_TYPES)}
+                onClick={() => setSelectedAlarms(availableAlarmTypes)}
                 disabled={isExtracting}
                 className="px-3 py-1 text-xs bg-[#86c8bc] text-[#001e32] rounded hover:bg-[#7bb8ac] disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -602,7 +625,7 @@ export default function DataExtractionPanel({ onExtractionComplete, previouslyEx
               </button>
             </div>
             <div className="max-h-48 overflow-y-auto space-y-2">
-              {ALARM_TYPES.map((alarmType, index) => (
+              {availableAlarmTypes.map((alarmType, index) => (
                 <div key={index} className="flex items-start space-x-3 bg-gray-700 p-2 rounded-md">
                   <input
                     type="checkbox"

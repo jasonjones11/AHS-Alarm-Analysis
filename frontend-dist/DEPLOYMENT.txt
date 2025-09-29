@@ -1,0 +1,18 @@
+AHS Alarm Analysis - Frontend Package
+=====================================
+
+QUICK START:
+1. Ensure Node.js is installed
+2. Double-click 'start.bat' to run the application
+3. Open http://localhost:3000 in your browser
+
+MANUAL START:
+Run: node server.js
+
+PORT CONFIGURATION:
+Set environment variable PORT=8080 to change port
+Example: set PORT=8080 && node server.js
+
+DEPLOYMENT:
+This folder contains everything needed to run the application.
+Just copy it to your server and run start.bat or node server.js

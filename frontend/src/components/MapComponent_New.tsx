@@ -1534,7 +1534,13 @@ export default function MapComponent({
                         
                         // Extract specific ASI properties for mining infrastructure
                         const name = props.AsiName || props.Name || props.name || 'Unknown Shape'
-                        const speedLimit = props.AsiSpeedLimit || props.SpeedLimit || props.speedLimit
+                        // Convert speed limit from m/s to km/h with 60 km/h max
+                        const rawSpeedLimit = props.AsiSpeedLimit || props.SpeedLimit || props.speedLimit
+                        let speedLimit = null
+                        if (rawSpeedLimit && !isNaN(parseFloat(rawSpeedLimit))) {
+                          const speedKmh = parseFloat(rawSpeedLimit) * 3.6 // Convert m/s to km/h
+                          speedLimit = Math.min(speedKmh, 60).toFixed(1) // Cap at 60 km/h, one decimal
+                        }
                         const type = props.AsiType || props.Type || props.type || 'Infrastructure'
                         
                         const popupContent = `

@@ -77,7 +77,7 @@ const CanvasHeatmapLayer = ({ map, heatmapPoints, gridSize }: { map: any, heatma
       try {
         // Convert lat/lng to pixel coordinates
         const pixelPoint = map.latLngToContainerPoint([point.lat, point.lng])
-        
+
         // Calculate smaller radius for more precise location visualization
         const zoom = map.getZoom()
         const gridSizeFactor = Math.max(0.3, 1.0 / (gridSize * 8000)) // Tighter factor for smaller radii
@@ -92,6 +92,35 @@ const CanvasHeatmapLayer = ({ map, heatmapPoints, gridSize }: { map: any, heatma
         ctx.beginPath()
         ctx.arc(pixelPoint.x, pixelPoint.y, radius, 0, 2 * Math.PI)
         ctx.fill()
+
+        // Draw alarm count text on hotspot with modern styling
+        if (point.alarmCount > 0) {
+          ctx.fillStyle = '#ffffff'
+          ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)'
+          ctx.lineWidth = 3
+          ctx.textAlign = 'center'
+          ctx.textBaseline = 'middle'
+
+          // Modern font with better sizing
+          const fontSize = Math.max(12, Math.min(18, zoom + (point.alarmCount > 10 ? 3 : 1)))
+          ctx.font = `600 ${fontSize}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`
+
+          // Add subtle shadow effect
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.6)'
+          ctx.shadowBlur = 4
+          ctx.shadowOffsetX = 1
+          ctx.shadowOffsetY = 1
+
+          // Draw text with modern stroke and fill
+          ctx.strokeText(point.alarmCount.toString(), pixelPoint.x, pixelPoint.y)
+          ctx.fillText(point.alarmCount.toString(), pixelPoint.x, pixelPoint.y)
+
+          // Reset shadow for next draws
+          ctx.shadowColor = 'transparent'
+          ctx.shadowBlur = 0
+          ctx.shadowOffsetX = 0
+          ctx.shadowOffsetY = 0
+        }
       } catch (error) {
         console.warn('Error drawing heatmap point:', error)
       }
@@ -430,37 +459,38 @@ export default function HeatmapAnalysisPanel({
 
 
   return (
-    <div className="bg-[#425563] rounded-xl shadow-2xl w-full max-w-[95vw] h-[95vh] flex flex-col">
+    <div className="bg-[#425563] rounded-lg shadow-2xl w-full max-w-[95vw] h-[95vh] flex flex-col border-2 border-black/50">
       {/* Header */}
-      <div className="flex items-center justify-between p-3 bg-[#ffc726]">
-        <h2 className="text-lg font-bold text-[#425563] flex items-center space-x-2">
-          <div className="p-1 bg-red-500/20 rounded">
-            <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 113 16.382V7.618a1 1 0 01.553-.894L9 4l6 3 6-3v13l-6 3-6-3z" />
+      <div className="flex items-center justify-between px-6 py-4 bg-[#425563] border-b-2 border-black/50 shadow-lg relative rounded-t-lg">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#425563] via-[#4a5f6f] to-[#425563] rounded-t-lg"></div>
+        <div className="relative z-10 flex items-center justify-between w-full">
+          <div>
+            <h2 className="text-xl font-bold text-[#ffc726] flex items-center space-x-2 drop-shadow-md">
+              <div className="p-1 bg-[#ffc726]/20 rounded border border-[#ffc726]/30">
+                <svg className="w-4 h-4 text-[#ffc726]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <span>Heatmap Analysis</span>
+            </h2>
+            <p className="text-[#ffc726] text-sm mt-1 drop-shadow-sm">
+              Spatial analysis by location ({selectedVehicles.length} vehicles, {selectedAlarmTypes.length === 0 ? 'all' : selectedAlarmTypes.length} alarm types)
+            </p>
+            {selectedAlarmTypes.length > 0 && (
+              <div className="text-xs text-[#ffc726]/90 mt-1 drop-shadow-sm">
+                <span className="text-[#ffc726] opacity-75">Analyzing:</span> {selectedAlarmTypes.join(', ')}
+              </div>
+            )}
+          </div>
+          <button
+            onClick={onClose}
+            className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-800/80 hover:bg-gray-700 text-gray-400 hover:text-white transition-colors border border-gray-600 shadow-md"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
-          </div>
-          <span>Heatmap Analysis</span>
-        </h2>
-        <button
-          onClick={onClose}
-          className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white transition-colors"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Subtitle section */}
-      <div className="px-3 pb-3 border-b border-gray-700 bg-[#ffc726] flex-shrink-0">
-        <p className="text-[#425563] text-sm">
-          Spatial analysis by location ({selectedVehicles.length} vehicles, {selectedAlarmTypes.length === 0 ? 'all' : selectedAlarmTypes.length} alarm types)
-        </p>
-        {selectedAlarmTypes.length > 0 && (
-          <div className="text-xs text-[#425563] mt-1">
-            <span className="text-[#425563] opacity-75">Analyzing:</span> {selectedAlarmTypes.join(', ')}
-          </div>
-        )}
+          </button>
+        </div>
       </div>
 
       {/* Content */}
@@ -548,11 +578,18 @@ export default function HeatmapAnalysisPanel({
                       onEachFeature={(feature, layer) => {
                         const shapeName = feature?.properties?.AsiName || feature?.properties?.name || 'Unnamed'
                         const shapeType = feature?.properties?.AsiType || feature?.properties?.type || 'Unknown'
-                        const speedLimit = feature?.properties?.AsiSpeedLimit || feature?.properties?.speedLimit || 'N/A'
+                        // Convert speed limit from m/s to km/h with 60 km/h max
+                        const rawSpeedLimit = feature?.properties?.AsiSpeedLimit || feature?.properties?.speedLimit
+                        let speedLimit = 'N/A'
+                        if (rawSpeedLimit && !isNaN(parseFloat(rawSpeedLimit))) {
+                          const speedKmh = parseFloat(rawSpeedLimit) * 3.6 // Convert m/s to km/h
+                          speedLimit = Math.min(speedKmh, 60).toFixed(1) + ' km/h' // Cap at 60 km/h, one decimal
+                        }
                         
                         layer.bindTooltip(`${shapeName}<br/>Type: ${shapeType}<br/>Speed Limit: ${speedLimit}`, {
                           permanent: false,
-                          direction: 'top'
+                          direction: 'top',
+                          className: 'heatmap-tooltip-white'
                         })
                       }}
                     />

@@ -57,9 +57,9 @@ html, body {
   cursor: grabbing !important;
 }
 
-/* Mining Map Specific Styles - Epiroc gray theme with no tile layer */
+/* Mining Map Specific Styles - Dark gray theme with no tile layer */
 .mining-map {
-  background: #425563 !important;
+  background: #1f2937 !important;
   height: 100% !important;
   width: 100% !important;
   min-height: 400px !important;
@@ -322,7 +322,7 @@ header {
   position: sticky !important;
   top: 0 !important;
   z-index: 9999 !important;
-  background: #1f2937 !important;
+  background: #425563 !important;
 }
 
 /* Prevent Leaflet from overriding layout */
@@ -344,4 +344,14 @@ header {
 main {
   position: relative !important;
   z-index: 0 !important;
+}
+
+/* Heatmap tooltip styling - white text for better readability */
+.heatmap-tooltip-white {
+  color: white !important;
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 4px !important;
+  padding: 8px !important;
+  font-size: 12px !important;
 }

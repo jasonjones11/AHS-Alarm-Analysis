@@ -2219,7 +2219,13 @@ export default function MapComponent({
                     const props = feature.properties || {}
                     const shapeName = props.AsiName || props.Name || props.name || 'Infrastructure'
                     const shapeType = props.AsiType || props.Type || props.type || 'Unknown'
-                    const speedLimit = props.AsiSpeedLimit || props.SpeedLimit || props.speedLimit || props.speed_limit || 'N/A'
+                    // Convert speed limit from m/s to km/h with 60 km/h max
+                    const rawSpeedLimit = props.AsiSpeedLimit || props.SpeedLimit || props.speedLimit || props.speed_limit
+                    let speedLimit = 'N/A'
+                    if (rawSpeedLimit && !isNaN(parseFloat(rawSpeedLimit))) {
+                      const speedKmh = parseFloat(rawSpeedLimit) * 3.6 // Convert m/s to km/h
+                      speedLimit = Math.min(speedKmh, 60).toFixed(1) + ' km/h' // Cap at 60 km/h, one decimal
+                    }
                     
                     const popupContent = `
                       <div class="p-4 bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-lg border border-slate-600">

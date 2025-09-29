@@ -97,7 +97,13 @@ const GeoJSONLayerClient = ({ data, onBoundsCalculated }: { data: any, onBoundsC
             const props = feature.properties
             const shapeType = props.AsiType || 'Unknown Shape'
             const shapeName = props.AsiName || 'Unnamed Shape'
-            const speedLimit = props.AsiSpeedLimit || null
+            // Convert speed limit from m/s to km/h with 60 km/h max
+            const rawSpeedLimit = props.AsiSpeedLimit
+            let speedLimit = null
+            if (rawSpeedLimit && !isNaN(parseFloat(rawSpeedLimit))) {
+              const speedKmh = parseFloat(rawSpeedLimit) * 3.6 // Convert m/s to km/h
+              speedLimit = Math.min(speedKmh, 60).toFixed(1) // Cap at 60 km/h, one decimal
+            }
             
             let tooltipContent = `
               <div class="mine-shape-tooltip">
@@ -317,6 +323,11 @@ export default function AlarmMapComponent({
     Object.entries(alarmData).forEach(([vehicleId, alarms]) => {
       alarms.forEach((alarm, index) => {
         if (isValidCoordinate(alarm.latitude, alarm.longitude)) {
+          // Apply alarm type filtering
+          if (selectedAlarmTypes.length > 0 && !selectedAlarmTypes.includes(alarm.alarm_type)) {
+            return // Skip this alarm if it doesn't match selected alarm types
+          }
+
           // Apply speed filtering
           if (speedRange) {
             const speed = alarm.speed_kmh
@@ -357,7 +368,7 @@ export default function AlarmMapComponent({
           // Create tooltip content
           const tooltipContent = `
             <div class="modern-alarm-tooltip">
-              <div class="tooltip-header">${alarm.alarm_title}</div>
+              <div class="tooltip-header">${alarm.alarm_type}</div>
               <div class="tooltip-content">
                 <div><span class="tooltip-label">Vehicle:</span> ${alarm.vehicle_id}</div>
                 <div><span class="tooltip-label">Time:</span> ${new Date(alarm.timestamp).toLocaleString()}</div>
@@ -387,7 +398,7 @@ export default function AlarmMapComponent({
 
           markers.push(
             <Marker
-              key={`${vehicleId}-${index}`}
+              key={`${vehicleId}-${index}-${alarm.alarm_type}-${alarm.timestamp}`}
               position={[alarm.latitude!, alarm.longitude!]}
               icon={L?.divIcon({
                 html: iconHtml,
@@ -415,7 +426,7 @@ export default function AlarmMapComponent({
     })
     
     return markers
-  }, [alarmData, trailColorMode, speedRange, selectedShapes, geoJsonData, shouldShowAlarm])
+  }, [alarmData, trailColorMode, speedRange, selectedShapes, geoJsonData, shouldShowAlarm, selectedAlarmTypes])
 
   // No trail lines - only alarm markers as requested
 
@@ -440,11 +451,12 @@ export default function AlarmMapComponent({
     }
   }, [alarmData])
 
-  useEffect(() => {
-    if (Object.keys(alarmData).length > 0) {
-      setTimeout(fitMapToAlarms, 500) // Small delay to ensure map is ready
-    }
-  }, [alarmData, fitMapToAlarms])
+  // Auto-fit disabled to prevent map jumping when filters change
+  // useEffect(() => {
+  //   if (Object.keys(alarmData).length > 0) {
+  //     setTimeout(fitMapToAlarms, 500) // Small delay to ensure map is ready
+  //   }
+  // }, [alarmData, fitMapToAlarms])
 
   // Get all alarm data points for legend statistics
   const allAlarmPoints = useMemo(() => {
@@ -486,7 +498,7 @@ export default function AlarmMapComponent({
   }, [allAlarmPoints, selectedVehicles, selectedAlarmTypes, speedRange, selectedShapes, geoJsonData])
 
   return (
-    <div className="flex-1 relative bg-[#425563]" style={{ minHeight: '400px', height: '100%' }}>
+    <div className="flex-1 relative bg-[#1f2937]" style={{ minHeight: '400px', height: '100%' }}>
       {/* Loading overlay */}
       {loading && (
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[500] bg-blue-600 text-white px-4 py-2 rounded-lg">
@@ -544,7 +556,7 @@ export default function AlarmMapComponent({
         className="w-full h-full mining-map"
         ref={mapRef}
         style={{
-          backgroundColor: '#425563',
+          backgroundColor: '#1f2937',
           position: 'relative',
           zIndex: 1,
           minHeight: '100%',

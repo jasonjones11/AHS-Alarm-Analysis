@@ -45,10 +45,11 @@ const DEFAULT_ALARM_TYPES = [
   "Off Path",
   "Steering Restricted",
   "Bump Detected: Dump",
-  "Bump Detected: Close", 
+  "Bump Detected: Close",
   "Undocumented Error c419",
   "Failed to Drive When Commanded",
-  "Slippery Conditions Caused Vehicle To Stop"
+  "Slippery Conditions Caused Vehicle To Stop",
+  "Test"
 ]
 
 export default function AlarmAnalysisPanel({
@@ -72,21 +73,39 @@ export default function AlarmAnalysisPanel({
   const [error, setError] = useState<string | null>(null)
   const [totalSelectedAlarmCount, setTotalSelectedAlarmCount] = useState<number>(0)
 
-  // Load available alarm types from API
+  // Debug: Log when availableAlarmTypes changes
+  useEffect(() => {
+    console.log('[AlarmPanel] availableAlarmTypes updated:', availableAlarmTypes)
+    console.log('[AlarmPanel] Contains Test:', availableAlarmTypes.includes('Test'))
+  }, [availableAlarmTypes])
+
+  // Load available alarm types from API (JSON configuration)
   const loadAlarmTypes = useCallback(async () => {
+    console.log('[AlarmPanel] Loading alarm types from API...')
     try {
-      const response = await fetch(buildApiUrl('/alarm-types'))
+      const apiUrl = buildApiUrl('/alarm-types')
+      console.log('[AlarmPanel] API URL:', apiUrl)
+
+      const response = await fetch(apiUrl)
+      console.log('[AlarmPanel] API response status:', response.status)
+
       if (response.ok) {
         const result = await response.json()
+        console.log('[AlarmPanel] API result:', result)
+
         if (result.status === 'success' && result.data?.current_alarm_types) {
+          console.log('[AlarmPanel] Setting alarm types from API:', result.data.current_alarm_types)
           setAvailableAlarmTypes(result.data.current_alarm_types)
+        } else {
+          console.warn('[AlarmPanel] API response invalid, using defaults')
+          setAvailableAlarmTypes(DEFAULT_ALARM_TYPES)
         }
       } else {
-        console.warn('Failed to load alarm types from API, using defaults')
+        console.warn('[AlarmPanel] API response not OK, using defaults')
         setAvailableAlarmTypes(DEFAULT_ALARM_TYPES)
       }
     } catch (error) {
-      console.warn('Failed to load alarm types from API, using defaults:', error)
+      console.warn('[AlarmPanel] API call failed, using defaults:', error)
       setAvailableAlarmTypes(DEFAULT_ALARM_TYPES)
     }
   }, [])

@@ -129,14 +129,23 @@ const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isVisible, on
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[9999] p-4">
-      <div className="bg-gray-900 rounded-lg shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden">
+      <div className="bg-gray-900 rounded-lg shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden border-2 border-black/50">
         {/* Header */}
-        <div className="bg-[#ffc726] px-6 py-4 border-b border-gray-700 flex justify-between items-center">
-          <div>
-            <h2 className="text-2xl font-bold text-[#425563]">Admin Dashboard</h2>
-            <p className="text-[#425563]">License Management & User Administration</p>
+        <div className="bg-[#425563] px-6 py-4 border-b-2 border-black/50 flex justify-between items-center shadow-lg relative rounded-t-lg">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#425563] via-[#4a5f6f] to-[#425563] rounded-t-lg"></div>
+          <div className="relative z-10">
+            <h2 className="text-xl font-bold text-[#ffc726] drop-shadow-md flex items-center space-x-2">
+              <div className="p-1 bg-[#ffc726]/20 rounded border border-[#ffc726]/30">
+                <svg className="w-4 h-4 text-[#ffc726]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <span>Admin Dashboard</span>
+            </h2>
+            <p className="text-[#ffc726] text-sm mt-1 drop-shadow-sm">License Management & User Administration</p>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="relative z-10 flex items-center space-x-3">
             <button
               onClick={() => setShowGenerator(!showGenerator)}
               className="px-4 py-2 bg-[#86c8bc] text-[#001e32] rounded-lg hover:bg-[#7bb8ac] transition-colors"
@@ -145,7 +154,7 @@ const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isVisible, on
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-2 text-gray-400 hover:text-white hover:bg-gray-700/80 rounded-lg transition-colors border border-gray-600 shadow-md"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

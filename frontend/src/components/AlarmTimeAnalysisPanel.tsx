@@ -352,35 +352,38 @@ export default function AlarmTimeAnalysisPanel({
   }
 
   return (
-    <div className="bg-[#425563] rounded-xl shadow-2xl w-full max-w-[95vw] h-[95vh] flex flex-col">
+    <div className="bg-[#425563] rounded-lg shadow-2xl w-full max-w-[95vw] h-[95vh] flex flex-col border-2 border-black/50">
       {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b border-gray-700 flex-shrink-0 bg-[#ffc726]">
-        <div>
-          <h2 className="text-xl font-bold text-[#425563] flex items-center space-x-2">
-            <div className="p-2 bg-orange-500/20 rounded-lg">
-              <svg className="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="flex items-center justify-between px-6 py-4 border-b-2 border-black/50 flex-shrink-0 bg-[#425563] shadow-lg relative rounded-t-lg">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#425563] via-[#4a5f6f] to-[#425563] rounded-t-lg"></div>
+        <div className="relative z-10 flex items-center justify-between w-full">
+          <div>
+            <h2 className="text-xl font-bold text-[#ffc726] flex items-center space-x-2 drop-shadow-md">
+            <div className="p-2 bg-[#ffc726]/20 rounded-lg border border-[#ffc726]/30">
+              <svg className="w-4 h-4 text-[#ffc726]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
             <span>Hour-by-Hour Alarm Analysis</span>
           </h2>
-          <p className="text-[#425563] text-sm mt-1">
+          <p className="text-[#ffc726] text-sm mt-1 drop-shadow-sm">
             Stacked analysis by truck ({selectedVehicles.length} vehicles, {selectedAlarmTypes.length === 0 ? 'all' : selectedAlarmTypes.length} alarm types)
           </p>
           {selectedAlarmTypes.length > 0 && (
-            <div className="text-xs text-[#425563] mt-1">
-              <span className="text-[#425563]">Analyzing:</span> {selectedAlarmTypes.join(', ')}
+            <div className="text-xs text-[#ffc726]/90 mt-1 drop-shadow-sm">
+              <span className="text-[#ffc726]">Analyzing:</span> {selectedAlarmTypes.join(', ')}
             </div>
           )}
-        </div>
-        <button
-          onClick={onClose}
-          className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white transition-colors"
-        >
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800/80 hover:bg-gray-700 text-gray-400 hover:text-white transition-colors border border-gray-600 shadow-md"
+          >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
-        </button>
+          </button>
+        </div>
       </div>
 
 

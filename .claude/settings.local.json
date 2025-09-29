@@ -121,7 +121,8 @@
       "Bash(timeout 5s npm start)",
       "Bash(timeout 10s ls:*)",
       "Bash(timeout 10s netstat:*)",
-      "Bash(tasklist)"
+      "Bash(tasklist)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": [],

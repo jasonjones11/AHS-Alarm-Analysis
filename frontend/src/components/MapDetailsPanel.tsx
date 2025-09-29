@@ -105,17 +105,26 @@ const MapDetailsPanel: React.FC<MapDetailsPanelProps> = ({
   const totalVertices = shapeStats.reduce((sum, stat) => sum + stat.totalVertices, 0)
 
   return (
-    <div className="bg-gray-900 rounded-xl shadow-2xl w-full max-w-6xl max-h-[90vh] flex flex-col">
+    <div className="bg-gray-900 rounded-lg shadow-2xl w-full max-w-6xl max-h-[90vh] flex flex-col border-2 border-black/50">
       {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b border-gray-700 bg-[#ffc726]">
-        <div>
-          <h2 className="text-2xl font-bold text-[#425563]">Map Analysis</h2>
-          <p className="text-[#425563] mt-1">Detailed breakdown of map shapes</p>
+      <div className="flex items-center justify-between px-6 py-4 border-b-2 border-black/50 bg-[#425563] shadow-lg relative rounded-t-lg">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#425563] via-[#4a5f6f] to-[#425563] rounded-t-lg"></div>
+        <div className="relative z-10">
+          <h2 className="text-xl font-bold text-[#ffc726] drop-shadow-md flex items-center space-x-2">
+            <div className="p-1 bg-[#ffc726]/20 rounded border border-[#ffc726]/30">
+              <svg className="w-4 h-4 text-[#ffc726]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <span>Map Analysis</span>
+          </h2>
+          <p className="text-[#ffc726] text-sm mt-1 drop-shadow-sm">Detailed breakdown of map shapes</p>
         </div>
         {onClose && (
           <button
             onClick={onClose}
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white transition-colors"
+            className="relative z-10 w-10 h-10 flex items-center justify-center rounded-full bg-gray-800/80 hover:bg-gray-700 text-gray-400 hover:text-white transition-colors border border-gray-600 shadow-md"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
