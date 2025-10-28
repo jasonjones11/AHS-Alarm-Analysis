@@ -10,6 +10,7 @@ uvicorn[standard]==0.24.0      # High-performance ASGI server for FastAPI
 # ================================
 # Database and Data Processing
 # ================================
+numpy<2.0.0                   # NumPy 1.x required for pandas 2.1.4 compatibility
 influxdb==5.2.3               # InfluxDB client for alarm extraction
 pandas==2.1.4                 # Data processing for telemetry analysis
 

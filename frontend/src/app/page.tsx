@@ -308,7 +308,7 @@ export default function Home() {
   return (
     <main className="h-screen flex flex-col bg-[#1f2937] text-white overflow-hidden font-raleway">
       {/* Header */}
-      <header className="w-full bg-[#425563] p-4 shadow-md flex items-center justify-between flex-shrink-0" style={{ position: 'sticky', top: 0, zIndex: 9999 }}>
+      <header className="w-full bg-[#425563] p-3.2 shadow-md flex items-center justify-between flex-shrink-0" style={{ position: 'sticky', top: 0, zIndex: 9999 }}>
         <div className="flex items-center space-x-4">
           {/* Epiroc Logo */}
           <div className="flex-shrink-0">
